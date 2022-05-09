@@ -74,7 +74,9 @@
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      const socket = io('http://localhost:3000', { autoConnect: false });
+      const socket = io('https://c420d4c0b6dc71.lhrtunnel.link/', {
+        autoConnect: false,
+      });
 
       const messages = document.getElementById('messages');
       const form = document.getElementById('form');
@@ -116,7 +118,7 @@
       socket.on('user disconnect', (user_name) => {
         const item = document.createElement('li');
         console.log('This is the username: ', user_name);
-        item.textContent = user_name + 'has disconnected';
+        item.textContent = user_name + ' has disconnected';
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });
