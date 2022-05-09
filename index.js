@@ -23,8 +23,23 @@ io.on('connection', (socket) => {
     io.emit('users', userToSocketId);
   });
 
+  socket.on('join', ({ username }) => {
+    socket.join(username);
+  });
+
+  // socket.on('private message', (anotherSocketId, msg) => {
+  //   // io.to(anotherSocketId).emit('private message', msg);
+  //   io.to(anotherSocketId).emit('private message', msg);
+  //   // io.to(anotherSocketId).emit('private message', socket.id, msg);
+  //   // io.to(anotherSocketId).emit('private message', socket.id, msg);
+  // });
+
   socket.on('chat message', (message) => {
-    io.emit('chat message', { username: userToSocketId[socket.id], message });
+    // io.emit('chat message', { username: userToSocketId[socket.id], message });
+    socket
+      .in('farouk')
+      .emit('new_msg', { username: userToSocketId[socket.id], message });
+
     console.log('username: ', userToSocketId[socket.id], 'message: ', message);
     console.log('executing chat message');
   });

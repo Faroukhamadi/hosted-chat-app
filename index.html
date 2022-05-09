@@ -100,6 +100,7 @@
       form.addEventListener('submit', (e) => {
         e.preventDefault();
         if (input.value) {
+          // socket.emit('private message', input.value);
           socket.emit('chat message', input.value);
           input.value = '';
         }
@@ -113,6 +114,14 @@
         socket.connect();
         socket.emit('register username', username);
         socket.emit('users');
+        socket.emit('join', { username });
+      });
+
+      socket.on('new_msg', (data) => {
+        const item = document.createElement('li');
+        item.textContent = '---------' + ': ' + data.message;
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
       });
 
       socket.on('chat message', (data) => {
@@ -121,6 +130,15 @@
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });
+
+      // socket.on('private message', (message) => {
+      //   console.log('private message is happening');
+      //   console.log('message inside private message:', message);
+      //   const item = document.createElement('li');
+      //   item.textContent = message;
+      //   messages.appendChild(item);
+      //   window.scrollTo(0, document.body.scrollHeight);
+      // });
 
       socket.on('users', (users) => {
         const usersContainer = document.querySelector('.users');
