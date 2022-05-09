@@ -19,7 +19,8 @@ io.on('connection', (socket) => {
     console.log('before disconnect delete', userToSocketId);
     delete userToSocketId[socket.id];
     console.log('after disconnect delete', userToSocketId);
-    io.emit('user disconnect', socket.user_name);
+    io.emit('user disconnect', socket.user_name, userToSocketId);
+    io.emit('users', userToSocketId);
   });
 
   socket.on('chat message', (message) => {

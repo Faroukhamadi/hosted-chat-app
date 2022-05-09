@@ -124,26 +124,37 @@
 
       socket.on('users', (users) => {
         const usersContainer = document.querySelector('.users');
-        usersContainer.innerHTML = '';
+        // usersContainer.innerHTML = '';
         for (const user in users) {
           let userContainer = document.createElement('div');
-          userContainer.className = 'user';
           let nameText = document.createElement('p');
           let idText = document.createElement('p');
+          let statusText = document.createElement('p');
+          userContainer.className = 'user';
           nameText.textContent = users[user];
           idText.textContent = user;
+          statusText.textContent = 'Online';
           userContainer.appendChild(nameText);
           userContainer.appendChild(idText);
+          userContainer.appendChild(statusText);
           usersContainer.appendChild(userContainer);
         }
         console.log('type of users in client:', typeof users);
         console.log('users in client:', users);
+        window.scrollTo(0, document.body.scrollHeight);
       });
 
-      socket.on('user disconnect', (user_name) => {
+      socket.on('user disconnect', (user_name, users) => {
+        const usersContainer = document.querySelectorAll('.user');
+
+        for (const userContainer of usersContainer) {
+          if (userContainer.firstChild.textContent === user_name) {
+            userContainer.children.item(2).textContent = 'Offline';
+          }
+        }
         const item = document.createElement('li');
         console.log('This is the username: ', user_name);
-        item.textContent = user_name + 'has disconnected';
+        item.textContent = user_name + ' ' + 'has disconnected';
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });
