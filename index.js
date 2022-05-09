@@ -16,9 +16,10 @@ io.on('connection', (socket) => {
   console.log('connection');
 
   socket.on('disconnect', () => {
+    console.log('before disconnect delete', userToSocketId);
     delete userToSocketId[socket.id];
+    console.log('after disconnect delete', userToSocketId);
     io.emit('user disconnect', socket.user_name);
-    // io.emit('users', { users: Object.values(userToSocketId) });
   });
 
   socket.on('chat message', (message) => {
@@ -30,7 +31,7 @@ io.on('connection', (socket) => {
   socket.on('register username', (username) => {
     userToSocketId[socket.id] = username;
     socket.user_name = username;
-    // io.emit('users', { users: Object.values(userToSocketId) });
+    io.emit('users', userToSocketId);
   });
 });
 

@@ -59,14 +59,25 @@
       .hide {
         display: none;
       }
+      .user {
+        background: gray;
+      }
     </style>
   </head>
   <body>
     <form action="/home" id="username-form">
-      <input type="text" id="username" placeholder="username" name="username" />
+      <input
+        type="text"
+        id="username"
+        placeholder="username"
+        name="username"
+        style="outline: none"
+        autocomplete="off"
+      />
       <button type="submit">Submit</button>
     </form>
     <div class="hide">
+      <div class="users"></div>
       <ul id="messages"></ul>
       <form id="form" action="">
         <input id="input" autocomplete="off" /><button>send</button>
@@ -74,7 +85,7 @@
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      const socket = io('https://c420d4c0b6dc71.lhrtunnel.link/', {
+      const socket = io('http://localhost:3000', {
         autoConnect: false,
       });
 
@@ -101,24 +112,38 @@
         hideDiv.classList.toggle('hide');
         socket.connect();
         socket.emit('register username', username);
-      });
-
-      socket.on('users', ({ users }) => {
-        console.log('---USERS---', users);
+        socket.emit('users');
       });
 
       socket.on('chat message', (data) => {
-        // socket.emit('chat message', input.value);
         const item = document.createElement('li');
         item.textContent = data.username + ': ' + data.message;
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });
 
+      socket.on('users', (users) => {
+        const usersContainer = document.querySelector('.users');
+        usersContainer.innerHTML = '';
+        for (const user in users) {
+          let userContainer = document.createElement('div');
+          userContainer.className = 'user';
+          let nameText = document.createElement('p');
+          let idText = document.createElement('p');
+          nameText.textContent = users[user];
+          idText.textContent = user;
+          userContainer.appendChild(nameText);
+          userContainer.appendChild(idText);
+          usersContainer.appendChild(userContainer);
+        }
+        console.log('type of users in client:', typeof users);
+        console.log('users in client:', users);
+      });
+
       socket.on('user disconnect', (user_name) => {
         const item = document.createElement('li');
         console.log('This is the username: ', user_name);
-        item.textContent = user_name + ' has disconnected';
+        item.textContent = user_name + 'has disconnected';
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });
