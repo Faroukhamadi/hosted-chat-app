@@ -27,13 +27,6 @@ io.on('connection', (socket) => {
     socket.join(username);
   });
 
-  // socket.on('private message', (anotherSocketId, msg) => {
-  //   // io.to(anotherSocketId).emit('private message', msg);
-  //   io.to(anotherSocketId).emit('private message', msg);
-  //   // io.to(anotherSocketId).emit('private message', socket.id, msg);
-  //   // io.to(anotherSocketId).emit('private message', socket.id, msg);
-  // });
-
   socket.on('chat message', (message) => {
     // io.emit('chat message', { username: userToSocketId[socket.id], message });
     socket
